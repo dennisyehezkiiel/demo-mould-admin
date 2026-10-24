@@ -1,57 +1,52 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Field, Input, PageHeader, inputCls } from "@/components/ui";
 import { materialCategories, unitTypes } from "@/lib/data";
+import type * as yup from "yup";
+import { materialSchema } from "@/lib/schemas";
 import { useStore } from "@/lib/store";
 
 export default function NewMaterialPage() {
   const router = useRouter();
   const { materials, addMaterial } = useStore();
-  const [error, setError] = useState("");
+  const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    resolver: yupResolver(materialSchema),
+    defaultValues: { category: "", unit: "", description: "" },
+  });
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const f = new FormData(e.currentTarget);
-    const code = String(f.get("code")).trim().toUpperCase();
-    if (materials.some((m) => m.code === code)) return setError("Code already exists");
-    addMaterial({
-      code,
-      name: String(f.get("name")),
-      category: String(f.get("category")),
-      unit: String(f.get("unit")),
-      stock: Number(f.get("stock")),
-      unitPrice: Number(f.get("unitPrice")),
-      supplier: String(f.get("supplier")),
-      description: String(f.get("description")),
-    });
+  function onSubmit(data: yup.InferType<typeof materialSchema>) {
+    const code = data.code.toUpperCase();
+    if (materials.some((m) => m.code === code)) return setError("code", { message: "Code already exists" });
+    addMaterial({ ...data, code });
     router.push("/dashboard/materials");
   }
 
   return (
     <>
       <PageHeader title="Add Material" />
-      <form onSubmit={onSubmit} className="grid max-w-3xl gap-4 rounded-xl border border-slate-200 bg-white p-6 sm:grid-cols-2">
-        <Field label="Material name"><Input name="name" required /></Field>
-        <Field label="Material code" error={error}><Input name="code" required onChange={() => setError("")} /></Field>
-        <Field label="Category">
-          <select name="category" required defaultValue="" className={inputCls}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid max-w-3xl gap-4 rounded-xl border border-slate-200 bg-white p-6 sm:grid-cols-2">
+        <Field label="Material name" error={errors.name?.message}><Input {...register("name")} /></Field>
+        <Field label="Material code" error={errors.code?.message}><Input {...register("code")} /></Field>
+        <Field label="Category" error={errors.category?.message}>
+          <select {...register("category")} className={inputCls}>
             <option value="" disabled>Select category</option>
             {materialCategories.map((c) => <option key={c}>{c}</option>)}
           </select>
         </Field>
-        <Field label="Unit type">
-          <select name="unit" required defaultValue="" className={inputCls}>
+        <Field label="Unit type" error={errors.unit?.message}>
+          <select {...register("unit")} className={inputCls}>
             <option value="" disabled>Select unit</option>
             {unitTypes.map((u) => <option key={u}>{u}</option>)}
           </select>
         </Field>
-        <Field label="Stock level"><Input name="stock" type="number" min="0" step="any" required /></Field>
-        <Field label="Cost per unit (USD)"><Input name="unitPrice" type="number" min="0" step="0.01" required /></Field>
-        <Field label="Supplier" className="sm:col-span-2"><Input name="supplier" required /></Field>
+        <Field label="Stock level" error={errors.stock?.message}><Input type="number" step="any" {...register("stock")} /></Field>
+        <Field label="Cost per unit (USD)" error={errors.unitPrice?.message}><Input type="number" step="0.01" {...register("unitPrice")} /></Field>
+        <Field label="Supplier" className="sm:col-span-2" error={errors.supplier?.message}><Input {...register("supplier")} /></Field>
         <Field label="Description" className="sm:col-span-2">
-          <textarea name="description" rows={3} className={`${inputCls} h-auto py-2`} />
+          <textarea {...register("description")} rows={3} className={`${inputCls} h-auto py-2`} />
         </Field>
         <div className="flex justify-end gap-2 sm:col-span-2">
           <Button type="button" variant="outline" onClick={() => router.push("/dashboard/materials")}>Cancel</Button>
