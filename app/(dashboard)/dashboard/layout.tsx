@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { Shell } from "@/app/components/shell";
+import { DashboardTemplate } from "@/app/components/templates/dashboard-template";
 import { StoreProvider } from "@/lib/store";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <StoreProvider>
       <Suspense>
-        <Shell>{children}</Shell>
+        <DashboardTemplate>{children}</DashboardTemplate>
       </Suspense>
     </StoreProvider>
   );

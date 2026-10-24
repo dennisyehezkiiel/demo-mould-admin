@@ -1,11 +1,10 @@
-import { ItemForm } from "@/app/components/item-form";
-import { PageHeader } from "@/app/components/ui";
+import { ItemForm } from "@/app/components/organisms/item-form";
+import { FormPageTemplate } from "@/app/components/templates/form-page-template";
 
 export function NewItemPageView() {
   return (
-    <>
-      <PageHeader title="Add Item" />
+    <FormPageTemplate title="Add Item">
       <ItemForm />
-    </>
+    </FormPageTemplate>
   );
 }
