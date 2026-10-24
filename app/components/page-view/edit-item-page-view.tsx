@@ -3,7 +3,7 @@ import { EditItemContentView } from "@/app/components/page-view/edit-item-conten
 
 export function EditItemPageView({ params }: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-slate-500">Loading…</p>}>
+    <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
       <EditItemLoader params={params} />
     </Suspense>
   );
