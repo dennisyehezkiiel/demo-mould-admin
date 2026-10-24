@@ -3,30 +3,33 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Field, Input } from "@/components/ui";
+import { loginSchema } from "@/lib/schemas";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(loginSchema) });
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function onSubmit() {
     setLoading(true);
     // ponytail: fake auth, any credentials pass. Replace with real session call.
     setTimeout(() => router.push("/dashboard/items"), 600);
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold">Welcome back</h1>
         <p className="text-sm text-slate-500">Sign in to your account</p>
       </div>
-      <Field label="Email">
-        <Input type="email" required placeholder="you@company.com" autoComplete="email" />
+      <Field label="Email" error={errors.email?.message}>
+        <Input type="email" {...register("email")} placeholder="you@company.com" autoComplete="email" />
       </Field>
-      <Field label="Password">
-        <Input type="password" required placeholder="••••••••" autoComplete="current-password" />
+      <Field label="Password" error={errors.password?.message}>
+        <Input type="password" {...register("password")} placeholder="••••••••" autoComplete="current-password" />
       </Field>
       <div className="flex items-center justify-between text-sm">
         <label className="flex items-center gap-2 text-slate-600">

@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { CheckCircle2 } from "lucide-react";
 import { Button, Field, Input } from "@/components/ui";
+import { forgotSchema } from "@/lib/schemas";
 
 export default function ForgotPasswordPage() {
   const [sentTo, setSentTo] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const email = String(new FormData(e.currentTarget).get("email"));
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(forgotSchema) });
+
+  function onSubmit({ email }: { email: string }) {
     setLoading(true);
     setTimeout(() => {
       setSentTo(email);
@@ -31,9 +34,9 @@ export default function ForgotPasswordPage() {
           <p>Reset link sent to <strong>{sentTo}</strong>. Check your inbox.</p>
         </div>
       ) : (
-        <form onSubmit={onSubmit} className="space-y-4">
-          <Field label="Email">
-            <Input name="email" type="email" required placeholder="you@company.com" autoComplete="email" />
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+          <Field label="Email" error={errors.email?.message}>
+            <Input type="email" {...register("email")} placeholder="you@company.com" autoComplete="email" />
           </Field>
           <Button type="submit" loading={loading} className="w-full">Send reset link</Button>
         </form>
