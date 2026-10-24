@@ -1,11 +1,5 @@
-import { ItemForm } from "@/components/item-form";
-import { PageHeader } from "@/components/ui";
+import { NewItemPageView } from "@/app/components/page-view/new-item-page-view";
 
-export default function NewItemPage() {
-  return (
-    <>
-      <PageHeader title="Add Item" />
-      <ItemForm />
-    </>
-  );
+export default function Page() {
+  return <NewItemPageView />;
 }

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Field, Input, inputCls } from "@/components/ui";
+import { Button, Field, Input, inputCls } from "@/app/components/ui";
 import { itemCategories, type Item } from "@/lib/data";
 import type * as yup from "yup";
 import { itemSchema } from "@/lib/schemas";
