@@ -16,9 +16,11 @@ import { authService } from "@/lib/service/auth-service";
 import { LoginRequest } from "@/app/types/auth-type";
 import { Cookies } from "react-cookie";
 import Paths from "@/lib/route-paths";
+import { useNotifyError } from "@/lib/use-notify-error";
 
 export function LoginForm() {
   const { replace } = useRouter();
+  const notifyError = useNotifyError();
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -33,14 +35,14 @@ export function LoginForm() {
       new Cookies().set("access_token", res.access_token);
       replace(Paths.items.dashboardItems);
     } catch (error) {
-      console.log(error, ">>>cek error");
+      notifyError(error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <FormHeading title="Welcome back" subtitle="Sign in to your account" />
       <Field label="Email" error={errors.email?.message}>
         <Input

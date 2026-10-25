@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Eye, Trash2 } from "lucide-react";
 import { IconButton } from "@/app/components/atoms/icon-button";
 import { ConfirmDelete } from "@/app/components/molecules/confirm-delete";
@@ -9,12 +9,25 @@ import { ListPageTemplate } from "@/app/components/templates/list-page-template"
 import type { Item } from "@/lib/data";
 import { Column, DataTable } from "../organisms/data-table";
 import { itemService } from "@/lib/service/item-service";
+import { useNotifyError } from "@/lib/use-notify-error";
 
 export function ItemsPageView() {
+  const notifyError = useNotifyError();
   const [q, setQ] = useState("");
   const [view, setView] = useState<Item>();
   const [del, setDel] = useState<Item>();
   const [rows, setRows] = useState<Item[] | []>([]);
+
+  const showDetail = useCallback(
+    async (no: number) => {
+      try {
+        setView(await itemService.detail(no));
+      } catch (error) {
+        notifyError(error);
+      }
+    },
+    [notifyError],
+  );
 
   const columns: Column<Item>[] = useMemo(
     () => [
@@ -36,16 +49,8 @@ export function ItemsPageView() {
         ),
       },
     ],
-    [],
+    [showDetail],
   );
-
-  async function showDetail(no: number) {
-    try {
-      setView(await itemService.detail(no));
-    } catch (error) {
-      console.log(error, ">>>>cek error");
-    }
-  }
 
   async function confirmDelete() {
     if (!del) return;
@@ -54,7 +59,7 @@ export function ItemsPageView() {
       setRows((r) => r.filter((i) => i.no !== del.no));
       setDel(undefined);
     } catch (error) {
-      console.log(error, ">>>>cek error");
+      notifyError(error);
     }
   }
 
@@ -64,12 +69,12 @@ export function ItemsPageView() {
         const data = await itemService.list();
         setRows(data);
       } catch (error) {
-        console.log(error, ">>>>cek error");
+        notifyError(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [notifyError]);
 
   return (
     <ListPageTemplate
