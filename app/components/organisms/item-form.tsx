@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import type { Item } from "@/lib/data";
 import { Input } from "@/app/components/atoms/input";
 import { Field } from "@/app/components/molecules/field";
 import { FormActions } from "@/app/components/molecules/form-actions";
 import { itemSchema } from "@/lib/schemas";
 import { itemService, type ItemBody } from "@/lib/service/item-service";
 import { useNotifyError } from "@/lib/use-notify-error";
+import { ItemDetailResponse } from "@/app/types/response/item-response";
 
 const fields: { name: keyof ItemBody; label: string }[] = [
   { name: "sapPn", label: "SAP PN" },
@@ -21,7 +21,7 @@ const fields: { name: keyof ItemBody; label: string }[] = [
   { name: "rm", label: "RM" },
 ];
 
-export function ItemForm({ item }: { item?: Item }) {
+export function ItemForm({ item }: { item?: ItemDetailResponse }) {
   const router = useRouter();
   const notifyError = useNotifyError();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ItemBody>({
@@ -30,9 +30,9 @@ export function ItemForm({ item }: { item?: Item }) {
       sapPn: item?.sapPn,
       starkeyPn: item?.starkeyPn,
       itemName: item?.itemName,
-      mould: item?.mould,
-      equipment: item?.equipment,
-      material: item?.material,
+      mould: item?.mouldNo,
+      equipment: item?.equipmentNo,
+      material: item?.material.id,
       rm: item?.rm,
     },
   });
