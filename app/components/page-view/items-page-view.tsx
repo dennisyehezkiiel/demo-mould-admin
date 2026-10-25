@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Eye, Trash2 } from "lucide-react";
+import { IconButton } from "@/app/components/atoms/icon-button";
 import { ConfirmDelete } from "@/app/components/molecules/confirm-delete";
 import { ItemDetailModal } from "@/app/components/organisms/item-detail-modal";
 import { ListPageTemplate } from "@/app/components/templates/list-page-template";
 import type { Item } from "@/lib/data";
-import { useStore } from "@/lib/store";
 import { Column, DataTable } from "../organisms/data-table";
 import { itemService } from "@/lib/service/item-service";
 
 export function ItemsPageView() {
-  const { deleteItem } = useStore();
   const [q, setQ] = useState("");
   const [view, setView] = useState<Item>();
   const [del, setDel] = useState<Item>();
@@ -26,9 +26,37 @@ export function ItemsPageView() {
       { header: "Equipment", cell: (i) => i.equipment },
       { header: "Material", cell: (i) => i.material },
       { header: "RM", cell: (i) => i.rm },
+      {
+        header: "Actions",
+        cell: (i) => (
+          <div className="flex gap-1">
+            <IconButton icon={Eye} label={`View ${i.itemName}`} onClick={() => showDetail(i.no)} />
+            <IconButton icon={Trash2} label={`Delete ${i.itemName}`} tone="danger" onClick={() => setDel(i)} />
+          </div>
+        ),
+      },
     ],
     [],
   );
+
+  async function showDetail(no: number) {
+    try {
+      setView(await itemService.detail(no));
+    } catch (error) {
+      console.log(error, ">>>>cek error");
+    }
+  }
+
+  async function confirmDelete() {
+    if (!del) return;
+    try {
+      await itemService.delete(del.no);
+      setRows((r) => r.filter((i) => i.no !== del.no));
+      setDel(undefined);
+    } catch (error) {
+      console.log(error, ">>>>cek error");
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,10 +90,7 @@ export function ItemsPageView() {
       <ConfirmDelete
         name={del?.itemName}
         onCancel={() => setDel(undefined)}
-        onConfirm={() => {
-          if (del) deleteItem(del.no);
-          setDel(undefined);
-        }}
+        onConfirm={confirmDelete}
       />
     </ListPageTemplate>
   );
