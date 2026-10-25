@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { ItemForm } from "@/app/components/organisms/item-form";
 import { FormPageTemplate } from "@/app/components/templates/form-page-template";
-import type { Item } from "@/lib/data";
 import { itemService } from "@/lib/service/item-service";
 import { useNotifyError } from "@/lib/use-notify-error";
+import { ItemDetailResponse } from "@/app/types/response/item-response";
 
 export function EditItemContentView({ id }: { id: number }) {
   const notifyError = useNotifyError();
-  const [item, setItem] = useState<Item>();
+  const [item, setItem] = useState<ItemDetailResponse>();
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
