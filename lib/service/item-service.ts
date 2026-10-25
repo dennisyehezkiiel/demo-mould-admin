@@ -5,7 +5,7 @@ import type { Item } from "@/lib/data";
 import type { itemSchema } from "@/lib/schemas";
 
 type Id = string | number;
-export type ItemBody = yup.InferType<typeof itemSchema> & { active: boolean };
+export type ItemBody = yup.InferType<typeof itemSchema>;
 
 export const itemService = {
   list: (params?: Record<string, unknown>) => api.get<Item[]>(API_PATHS.items.list, { params }),

@@ -1,56 +1,58 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import type * as yup from "yup";
+import type { Item } from "@/lib/data";
 import { Input } from "@/app/components/atoms/input";
-import { Textarea } from "@/app/components/atoms/textarea";
 import { Field } from "@/app/components/molecules/field";
 import { FormActions } from "@/app/components/molecules/form-actions";
-import { Select } from "@/app/components/molecules/select";
-import { SwitchField } from "@/app/components/molecules/switch-field";
-import { itemCategories, type Item } from "@/lib/data";
 import { itemSchema } from "@/lib/schemas";
-import { useStore } from "@/lib/store";
+import { itemService, type ItemBody } from "@/lib/service/item-service";
+
+const fields: { name: keyof ItemBody; label: string }[] = [
+  { name: "sapPn", label: "SAP PN" },
+  { name: "starkeyPn", label: "Starkey PN" },
+  { name: "itemName", label: "Item name" },
+  { name: "mould", label: "Mould" },
+  { name: "equipment", label: "Equipment" },
+  { name: "material", label: "Material" },
+  { name: "rm", label: "RM" },
+];
 
 export function ItemForm({ item }: { item?: Item }) {
   const router = useRouter();
-  const { saveItem } = useStore();
-  const [active, setActive] = useState(item?.active ?? true);
-  const { register, handleSubmit, formState: { errors } } = useForm<yup.InferType<typeof itemSchema>>({
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<ItemBody>({
     resolver: yupResolver(itemSchema),
-    defaultValues: { name: item?.name, category: item?.category ?? "", sku: item?.sku, price: item?.price, quantity: item?.quantity, description: item?.description ?? "" },
+    defaultValues: {
+      sapPn: item?.sapPn,
+      starkeyPn: item?.starkeyPn,
+      itemName: item?.itemName,
+      mould: item?.mould,
+      equipment: item?.equipment,
+      material: item?.material,
+      rm: item?.rm,
+    },
   });
 
-  function onSubmit(data: yup.InferType<typeof itemSchema>) {
-    saveItem({ id: item?.id, ...data, active });
-    router.push("/dashboard/items");
+  async function onSubmit(data: ItemBody) {
+    try {
+      await (item ? itemService.update(item.no, data) : itemService.create(data));
+      router.push("/dashboard/items");
+    } catch {
+      setError("root", { message: "Failed to save item" });
+    }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid max-w-3xl gap-4 rounded-xl border bg-card p-6 sm:grid-cols-2">
-      <Field label="Name" error={errors.name?.message}>
-        <Input {...register("name")} />
-      </Field>
-      <Field label="Category" error={errors.category?.message}>
-        <Select options={itemCategories} placeholder="Select category" {...register("category")} />
-      </Field>
-      <Field label="SKU" error={errors.sku?.message}>
-        <Input {...register("sku")} />
-      </Field>
-      <Field label="Price (USD)" error={errors.price?.message}>
-        <Input type="number" step="0.01" {...register("price")} />
-      </Field>
-      <Field label="Stock quantity" error={errors.quantity?.message}>
-        <Input type="number" step="1" {...register("quantity")} />
-      </Field>
-      <SwitchField checked={active} onChange={setActive} />
-      <Field label="Description" className="sm:col-span-2">
-        <Textarea {...register("description")} rows={4} />
-      </Field>
-      <FormActions className="sm:col-span-2" onCancel={() => router.push("/dashboard/items")} />
+      {fields.map(({ name, label }) => (
+        <Field key={name} label={label} error={errors[name]?.message}>
+          <Input {...register(name)} />
+        </Field>
+      ))}
+      {errors.root && <p role="alert" className="text-sm text-destructive sm:col-span-2">{errors.root.message}</p>}
+      <FormActions className="sm:col-span-2" loading={isSubmitting} onCancel={() => router.push("/dashboard/items")} />
     </form>
   );
 }

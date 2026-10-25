@@ -1,14 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ItemForm } from "@/app/components/organisms/item-form";
 import { FormPageTemplate } from "@/app/components/templates/form-page-template";
-import { useStore } from "@/lib/store";
+import type { Item } from "@/lib/data";
+import { itemService } from "@/lib/service/item-service";
 
 export function EditItemContentView({ id }: { id: number }) {
-  const item = useStore().items.find((i) => i.id === id);
-  if (!item) return <p className="text-sm text-muted-foreground">Item not found.</p>;
+  const [item, setItem] = useState<Item>();
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    itemService.detail(id).then(setItem).catch(() => setFailed(true));
+  }, [id]);
+
+  if (failed) return <p className="text-sm text-muted-foreground">Item not found.</p>;
+  if (!item) return <p className="text-sm text-muted-foreground">Loading…</p>;
   return (
-    <FormPageTemplate title={`Edit ${item.name}`}>
+    <FormPageTemplate title={`Edit ${item.itemName}`}>
       <ItemForm item={item} />
     </FormPageTemplate>
   );

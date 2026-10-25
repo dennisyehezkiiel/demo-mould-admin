@@ -24,12 +24,13 @@ export const registerSchema = yup.object({
 export const forgotSchema = yup.object({ email });
 
 export const itemSchema = yup.object({
-  name: text("Name"),
-  category: select("category"),
-  sku: text("SKU"),
-  price: num("Price"),
-  quantity: num("Quantity").integer("Quantity must be a whole number"),
-  description: yup.string().default(""),
+  sapPn: text("SAP PN"),
+  starkeyPn: text("Starkey PN"),
+  itemName: text("Item name"),
+  mould: text("Mould"),
+  equipment: text("Equipment"),
+  material: text("Material"),
+  rm: text("RM"),
 });
 
 export const materialSchema = yup.object({
