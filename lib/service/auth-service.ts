@@ -1,10 +1,7 @@
-import type * as yup from "yup";
 import { api } from "@/lib/api";
 import { API_PATHS } from "@/lib/api-path";
-import type { loginSchema } from "@/lib/schemas";
-
-export type LoginBody = yup.InferType<typeof loginSchema>;
+import { LoginRequest } from "@/app/types/auth-type";
 
 export const authService = {
-  login: (body: LoginBody) => api.post<{ token: string }>(API_PATHS.auth.login, body),
+  login: (body: LoginRequest) => api.post<{ token: string }>(API_PATHS.auth.login, body),
 };

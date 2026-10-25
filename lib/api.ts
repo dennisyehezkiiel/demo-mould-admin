@@ -1,4 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import { Cookies } from "react-cookie";
+import { TOKEN_COOKIE } from "@/lib/auth";
 
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -6,9 +8,8 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  // ponytail: token in localStorage, move to httpOnly cookie if XSS matters
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  // JS-readable cookie, needs a server-set httpOnly cookie to be XSS-safe
+  const token = new Cookies().get(TOKEN_COOKIE);
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -17,14 +18,13 @@ client.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("token");
+      new Cookies().remove(TOKEN_COOKIE, { path: "/" });
       window.location.replace("/login");
     }
     return Promise.reject(err);
   },
 );
 
-// Return response body directly.
 export const api = {
   get: <T>(url: string, config?: AxiosRequestConfig) =>
     client.get<T>(url, config).then((r) => r.data),
