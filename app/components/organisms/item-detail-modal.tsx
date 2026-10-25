@@ -1,20 +1,19 @@
 import { DetailGrid } from "@/app/components/molecules/detail-grid";
 import { Modal } from "@/app/components/molecules/modal";
-import type { Item } from "@/lib/data";
+import { ItemDetailResponse } from "@/app/types/response/item-response";
 
-export function ItemDetailModal({ item, onClose }: { item?: Item; onClose: () => void }) {
+export function ItemDetailModal({ item, onClose }: { item?: ItemDetailResponse; onClose: () => void }) {
   return (
     <Modal open={!!item} onClose={onClose} title={item?.itemName ?? ""}>
       {item && (
         <DetailGrid
           rows={[
-            ["No", item.no],
             ["SAP PN", item.sapPn],
             ["Starkey PN", item.starkeyPn],
             ["Item name", item.itemName],
-            ["Mould", item.mould],
-            ["Equipment", item.equipment],
-            ["Material", item.material],
+            ["Mould", item.mouldNo],
+            ["Equipment", item.equipmentNo],
+            ["Material", item?.material?.name],
             ["RM", item.rm],
           ]}
         />

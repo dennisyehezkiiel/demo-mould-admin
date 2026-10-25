@@ -7,6 +7,7 @@ export type Item = {
   equipment: string;
   material: string;
   rm: string;
+  id: string;
 };
 
 export type Material = {
