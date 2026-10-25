@@ -14,9 +14,11 @@ import { FormHeading } from "@/app/components/molecules/form-heading";
 import { loginSchema } from "@/lib/schemas";
 import { authService } from "@/lib/service/auth-service";
 import { LoginRequest } from "@/app/types/auth-type";
+import { Cookies } from "react-cookie";
+import Paths from "@/lib/route-paths";
 
 export function LoginForm() {
-  const router = useRouter();
+  const { replace } = useRouter();
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -28,6 +30,8 @@ export function LoginForm() {
     setLoading(true);
     try {
       const res = await authService.login(value);
+      new Cookies().set("access_token", res.access_token);
+      replace(Paths.items.dashboardItems);
     } catch (error) {
       console.log(error, ">>>cek error");
     } finally {
