@@ -1,6 +1,8 @@
 const Paths = {
   items: {
-    dashboardItems: '/dashboard/items'
+    dashboardItems: '/dashboard/items',
+    itemsDetail: '/dashboard/items',
+    itemCreate: '/dashboard/new'
   }
 }
 
