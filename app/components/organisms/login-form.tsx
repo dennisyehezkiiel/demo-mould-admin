@@ -11,16 +11,19 @@ import { Input } from "@/app/components/atoms/input";
 import { Label } from "@/app/components/atoms/label";
 import { Field } from "@/app/components/molecules/field";
 import { FormHeading } from "@/app/components/molecules/form-heading";
+import { AUTH_COOKIES } from "@/lib/auth";
 import { loginSchema } from "@/lib/schemas";
 import { authService } from "@/lib/service/auth-service";
 import { LoginRequest } from "@/app/types/auth-type";
-import { Cookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import Paths from "@/lib/route-paths";
 import { useNotifyError } from "@/lib/use-notify-error";
 
 export function LoginForm() {
   const { replace } = useRouter();
   const notifyError = useNotifyError();
+  // set through the provider's Cookies instance so useCookies elsewhere sees the new values at once
+  const [, setCookie] = useCookies([...AUTH_COOKIES]);
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -32,7 +35,10 @@ export function LoginForm() {
     setLoading(true);
     try {
       const res = await authService.login(value);
-      new Cookies().set("access_token", res.access_token);
+      setCookie("access_token", res.access_token, { path: "/" });
+      setCookie("name", res.name, { path: "/" });
+      setCookie("email", res.email, { path: "/" });
+      setCookie("role", res.role, { path: "/" });
       replace(Paths.items.dashboardItems);
     } catch (error) {
       notifyError(error);
