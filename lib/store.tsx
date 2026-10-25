@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { initialItems, initialMaterials, type Item, type Material } from "./data";
+import { initialMaterials, type Item, type Material } from "./data";
 
 type Store = {
   items: Item[];
@@ -22,21 +22,16 @@ export function useStore() {
 
 // ponytail: in-memory only, resets on full reload. Swap for API calls when a backend exists.
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState([]);
   const [materials, setMaterials] = useState(initialMaterials);
 
   const store: Store = {
     items,
     materials,
-    saveItem: (item) =>
-      setItems((prev) =>
-        item.id
-          ? prev.map((i) => (i.id === item.id ? { ...i, ...item, id: i.id } : i))
-          : [...prev, { ...item, id: Math.max(0, ...prev.map((i) => i.id)) + 1, createdAt: new Date().toISOString().slice(0, 10) }],
-      ),
-    deleteItem: (id) => setItems((p) => p.filter((i) => i.id !== id)),
-    addMaterial: (m) => setMaterials((p) => [...p, m]),
-    deleteMaterial: (code) => setMaterials((p) => p.filter((m) => m.code !== code)),
+    saveItem: (item) => null,
+    deleteItem: (id) => null,
+    addMaterial: (m) => null,
+    deleteMaterial: (code) => null,
   };
 
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;
