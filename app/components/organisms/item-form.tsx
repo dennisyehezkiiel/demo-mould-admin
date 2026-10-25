@@ -9,6 +9,7 @@ import { Field } from "@/app/components/molecules/field";
 import { FormActions } from "@/app/components/molecules/form-actions";
 import { itemSchema } from "@/lib/schemas";
 import { itemService, type ItemBody } from "@/lib/service/item-service";
+import { useNotifyError } from "@/lib/use-notify-error";
 
 const fields: { name: keyof ItemBody; label: string }[] = [
   { name: "sapPn", label: "SAP PN" },
@@ -22,7 +23,8 @@ const fields: { name: keyof ItemBody; label: string }[] = [
 
 export function ItemForm({ item }: { item?: Item }) {
   const router = useRouter();
-  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<ItemBody>({
+  const notifyError = useNotifyError();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ItemBody>({
     resolver: yupResolver(itemSchema),
     defaultValues: {
       sapPn: item?.sapPn,
@@ -39,8 +41,8 @@ export function ItemForm({ item }: { item?: Item }) {
     try {
       await (item ? itemService.update(item.no, data) : itemService.create(data));
       router.push("/dashboard/items");
-    } catch {
-      setError("root", { message: "Failed to save item" });
+    } catch (error) {
+      notifyError(error);
     }
   }
 
@@ -51,7 +53,6 @@ export function ItemForm({ item }: { item?: Item }) {
           <Input {...register(name)} />
         </Field>
       ))}
-      {errors.root && <p role="alert" className="text-sm text-destructive sm:col-span-2">{errors.root.message}</p>}
       <FormActions className="sm:col-span-2" loading={isSubmitting} onCancel={() => router.push("/dashboard/items")} />
     </form>
   );
