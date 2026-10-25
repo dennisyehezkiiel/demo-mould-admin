@@ -10,18 +10,21 @@ import type { Item } from "@/lib/data";
 import { Column, DataTable } from "../organisms/data-table";
 import { itemService } from "@/lib/service/item-service";
 import { useNotifyError } from "@/lib/use-notify-error";
+import { ItemDetailResponse } from "@/app/types/response/item-response";
 
 export function ItemsPageView() {
   const notifyError = useNotifyError();
   const [q, setQ] = useState("");
-  const [view, setView] = useState<Item>();
+  const [view, setView] = useState<ItemDetailResponse | null>(null);
   const [del, setDel] = useState<Item>();
   const [rows, setRows] = useState<Item[] | []>([]);
+  const [refetch, setRefetch] = useState<boolean>(false);
 
   const showDetail = useCallback(
-    async (no: number) => {
+    async (no: string) => {
       try {
-        setView(await itemService.detail(no));
+        const detail = await itemService.detail(no);
+        setView(detail);
       } catch (error) {
         notifyError(error);
       }
@@ -43,8 +46,17 @@ export function ItemsPageView() {
         header: "Actions",
         cell: (i) => (
           <div className="flex gap-1">
-            <IconButton icon={Eye} label={`View ${i.itemName}`} onClick={() => showDetail(i.no)} />
-            <IconButton icon={Trash2} label={`Delete ${i.itemName}`} tone="danger" onClick={() => setDel(i)} />
+            <IconButton
+              icon={Eye}
+              label={`View ${i.itemName}`}
+              onClick={() => showDetail(i.id)}
+            />
+            <IconButton
+              icon={Trash2}
+              label={`Delete ${i.itemName}`}
+              tone="danger"
+              onClick={() => setDel(i)}
+            />
           </div>
         ),
       },
@@ -55,9 +67,9 @@ export function ItemsPageView() {
   async function confirmDelete() {
     if (!del) return;
     try {
-      await itemService.delete(del.no);
-      setRows((r) => r.filter((i) => i.no !== del.no));
+      await itemService.delete(del.id);
       setDel(undefined);
+      setRefetch(true);
     } catch (error) {
       notifyError(error);
     }
@@ -74,7 +86,7 @@ export function ItemsPageView() {
     };
 
     fetchData();
-  }, [notifyError]);
+  }, [notifyError, refetch]);
 
   return (
     <ListPageTemplate
@@ -91,7 +103,7 @@ export function ItemsPageView() {
         rowKey={(i) => i.no}
         empty="No items found."
       />
-      <ItemDetailModal item={view} onClose={() => setView(undefined)} />
+      {view && <ItemDetailModal item={view} onClose={() => setView(null)} />}
       <ConfirmDelete
         name={del?.itemName}
         onCancel={() => setDel(undefined)}
