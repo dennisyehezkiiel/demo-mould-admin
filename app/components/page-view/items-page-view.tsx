@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Eye, Trash2 } from "lucide-react";
 import { IconButton } from "@/app/components/atoms/icon-button";
 import { ConfirmDelete } from "@/app/components/molecules/confirm-delete";
@@ -8,7 +8,7 @@ import { ItemDetailModal } from "@/app/components/organisms/item-detail-modal";
 import { ListPageTemplate } from "@/app/components/templates/list-page-template";
 import type { Item } from "@/lib/data";
 import { Column, DataTable } from "../organisms/data-table";
-import { itemService } from "@/lib/service/item-service";
+import { itemService, useGetItemList } from "@/lib/service/item-service";
 import { useNotifyError } from "@/lib/use-notify-error";
 import { ItemDetailResponse } from "@/app/types/response/item-response";
 
@@ -17,8 +17,8 @@ export function ItemsPageView() {
   const [q, setQ] = useState("");
   const [view, setView] = useState<ItemDetailResponse | null>(null);
   const [del, setDel] = useState<Item>();
-  const [rows, setRows] = useState<Item[] | []>([]);
-  const [refetch, setRefetch] = useState<boolean>(false);
+
+  const { data: rows, refetch } = useGetItemList();
 
   const showDetail = useCallback(
     async (no: string) => {
@@ -69,24 +69,11 @@ export function ItemsPageView() {
     try {
       await itemService.delete(del.id);
       setDel(undefined);
-      setRefetch(true);
+      refetch();
     } catch (error) {
       notifyError(error);
     }
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await itemService.list();
-        setRows(data);
-      } catch (error) {
-        notifyError(error);
-      }
-    };
-
-    fetchData();
-  }, [notifyError, refetch]);
 
   return (
     <ListPageTemplate
@@ -99,7 +86,7 @@ export function ItemsPageView() {
     >
       <DataTable
         columns={columns}
-        rows={rows}
+        rows={rows || []}
         rowKey={(i) => i.no}
         empty="No items found."
       />
