@@ -3,7 +3,7 @@ import { FormPageTemplate } from "@/app/components/templates/form-page-template"
 
 export function NewItemPageView() {
   return (
-    <FormPageTemplate title="Add Item">
+    <FormPageTemplate title="Testing Requisition">
       <ItemForm />
     </FormPageTemplate>
   );
