@@ -47,7 +47,7 @@ export function ItemForm({ item }: { item?: ItemDetailResponse }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid max-w-3xl gap-4 rounded-xl border bg-card p-6 sm:grid-cols-2">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid w-full gap-4 rounded-xl border bg-card p-6 sm:grid-cols-2">
       {fields.map(({ name, label }) => (
         <Field key={name} label={label} error={errors[name]?.message}>
           <Input {...register(name)} />
