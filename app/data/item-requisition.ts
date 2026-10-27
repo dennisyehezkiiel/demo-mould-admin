@@ -1,4 +1,5 @@
-import type { CreateItemRequisitionType, SelectOption } from "@/app/types/request/item-requisition-type";
+import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition-type";
+import { SelectOption } from "../types/select-option";
 
 export const createItemRequisitionData: CreateItemRequisitionType = {
   partNo: null,

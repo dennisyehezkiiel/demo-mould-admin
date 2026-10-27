@@ -1,7 +1,4 @@
-export interface SelectOption {
-  value: string;
-  label: string;
-}
+import { SelectOption } from "../select-option";
 
 export interface CreateItemRequisitionType {
   partNo: SelectOption | null;

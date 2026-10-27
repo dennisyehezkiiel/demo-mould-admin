@@ -1,14 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Controller, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Input } from "@/app/components/atoms/input";
 import { Textarea } from "@/app/components/atoms/textarea";
 import { Button } from "@/app/components/atoms/button";
-import { customerOptions, partNoOptions, processOptions } from "@/app/data/item-requisition";
-import type { CreateItemRequisitionType, SelectOption } from "@/app/types/request/item-requisition-type";
+import { partNoOptions } from "@/app/data/item-requisition";
+import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition-type";
 import { cn } from "@/lib/utils";
+import { SelectOption } from "@/app/types/select-option";
 
 type Name = keyof CreateItemRequisitionType;
 
@@ -17,6 +18,8 @@ interface Props {
   control: Control<CreateItemRequisitionType>;
   errors: FieldErrors<CreateItemRequisitionType>;
   isSubmitting: boolean;
+  customerOption: SelectOption[];
+  processOption: SelectOption[];
   onSubmit: () => void;
 }
 
@@ -46,7 +49,15 @@ function Row({ label, error, children, className }: { label: string; error?: str
   );
 }
 
-export default function CreateItemRequisitionForm({ register, control, errors, isSubmitting, onSubmit }: Props) {
+export default function CreateItemRequisitionForm({
+  register,
+  control,
+  errors,
+  isSubmitting,
+  onSubmit,
+  customerOption,
+  processOption
+}: Props) {
   const text = (name: Name, label: string, type = "text") => (
     <Row label={label} error={errors[name]?.message as string | undefined}>
       <Input type={type} {...register(name as never)} />
@@ -89,13 +100,13 @@ export default function CreateItemRequisitionForm({ register, control, errors, i
 
       <div className="grid gap-x-12 gap-y-4 p-6 lg:grid-cols-2">
         <div className="flex flex-col gap-4">
+          {select("customer", "Customer", customerOption)}
+          {select("process", "Process", processOption)}
           {select("partNo", "Part No", partNoOptions)}
           {text("productName", "Product Name")}
-          {select("process", "Process", processOptions)}
           {text("backflush", "Backflush")}
           {text("productDrawingNo", "Product Drawing No")}
           {text("revisionNo", "Revision No")}
-          {select("customer", "Customer", customerOptions)}
           {text("rawMaterial", "Raw Material to be Used")}
           {text("trialNo", "Trial No")}
           {text("testDate", "Test Date", "date")}

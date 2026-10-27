@@ -1,5 +1,5 @@
-import { NewItemPageView } from "@/app/components/page-view/new-item-page-view";
+import { ProductPageView } from "@/app/components/page-view/product-page-view";
 
 export default function Page() {
-  return <NewItemPageView />;
+  return <ProductPageView />;
 }
