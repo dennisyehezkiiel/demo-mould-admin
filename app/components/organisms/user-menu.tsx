@@ -16,6 +16,7 @@ import {
 } from "@/app/components/atoms/dropdown-menu";
 import { AUTH_COOKIES } from "@/lib/auth";
 import { getInitials } from "@/lib/utils";
+import Paths from "@/lib/route-paths";
 
 export function UserMenu() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export function UserMenu() {
 
   function logout() {
     AUTH_COOKIES.forEach((c) => removeCookie(c, { path: "/" }));
-    router.push("/login");
+    router.push(Paths.auth.login);
   }
 
   return (

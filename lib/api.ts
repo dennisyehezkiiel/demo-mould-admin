@@ -2,6 +2,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 import { Cookies } from "react-cookie";
 import { API_PATHS } from "@/lib/api-path";
 import { TOKEN_COOKIE } from "@/lib/auth";
+import Paths from "./route-paths";
 
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -22,7 +23,7 @@ client.interceptors.response.use(
     const isLogin = err.config?.url === API_PATHS.auth.login;
     if (err.response?.status === 401 && !isLogin && typeof window !== "undefined") {
       new Cookies().remove(TOKEN_COOKIE, { path: "/" });
-      window.location.replace("/login");
+      window.location.replace(Paths.auth.login);
     }
     return Promise.reject(err);
   },
