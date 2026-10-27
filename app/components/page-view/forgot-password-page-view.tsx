@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormHeading } from "@/app/components/molecules/form-heading";
 import { SuccessAlert } from "@/app/components/molecules/success-alert";
 import { ForgotPasswordForm } from "@/app/components/organisms/forgot-password-form";
+import Paths from "@/lib/route-paths";
 
 export function ForgotPasswordPageView() {
   const [sentTo, setSentTo] = useState("");
@@ -18,7 +19,7 @@ export function ForgotPasswordPageView() {
         <ForgotPasswordForm onSent={setSentTo} />
       )}
       <p className="text-center text-sm">
-        <Link href="/login" className="font-medium text-primary hover:underline">Back to sign in</Link>
+        <Link href={Paths.auth.login} className="font-medium text-primary hover:underline">Back to sign in</Link>
       </p>
     </div>
   );

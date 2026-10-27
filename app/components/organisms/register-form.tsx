@@ -10,6 +10,7 @@ import { Input } from "@/app/components/atoms/input";
 import { Field } from "@/app/components/molecules/field";
 import { FormHeading } from "@/app/components/molecules/form-heading";
 import { registerSchema } from "@/lib/schemas";
+import Paths from "@/lib/route-paths";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export function RegisterForm() {
 
   function onSubmit() {
     setLoading(true);
-    setTimeout(() => router.push("/login"), 600);
+    setTimeout(() => router.push(Paths.auth.login), 600);
   }
 
   return (
@@ -39,7 +40,7 @@ export function RegisterForm() {
       <Button type="submit" loading={loading} className="w-full">Create account</Button>
       <p className="text-center text-sm text-muted-foreground">
         Already registered?{" "}
-        <Link href="/login" className="font-medium text-primary hover:underline">Sign in</Link>
+        <Link href={Paths.auth.login} className="font-medium text-primary hover:underline">Sign in</Link>
       </p>
     </form>
   );
