@@ -11,4 +11,20 @@ export const API_PATHS = {
     update: (id: Id) => `/items/${id}`,
     delete: (id: Id) => `/items/${id}`,
   },
+  testingRequisition: {
+    list: '/testing-requisition',
+    create: '/testing-requisition'
+  },
+  process: {
+    list: '/processes'
+  },
+  customer: {
+    list: '/customers'
+  },
+  testingReason: {
+    list: '/testing-reasons'
+  },
+  product: {
+    list: '/products'
+  }
 } as const;
