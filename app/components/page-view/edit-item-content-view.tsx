@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ItemForm } from "@/app/components/organisms/item-form";
+import { ItemForm } from "@/app/components/organisms/form/item-form";
 import { FormPageTemplate } from "@/app/components/templates/form-page-template";
 import { itemService } from "@/lib/service/item-service";
 import { useNotifyError } from "@/lib/use-notify-error";
