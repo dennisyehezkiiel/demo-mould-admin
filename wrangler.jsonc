@@ -15,6 +15,6 @@
     "enabled": true,
   },
   "vars": {
-    "NEXT_PUBLIC_API_URL": "https://cicor-api.stephenjm15.workers.dev/",
+    "NEXT_PUBLIC_API_URL": "https://cicor-api.stephenjm15.workers.dev",
   },
 }
