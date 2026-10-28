@@ -12,11 +12,13 @@ import { SelectOption } from "@/app/types/select-option";
 import { CreateItemRequisitionType, RequestItemRequisitionType } from "@/app/types/request/item-requisition";
 import { useCreateTestingRequisition } from "@/lib/service/testing-requisition-service";
 import { useNotifyError } from "@/lib/use-notify-error";
+import { useGetTestingReasonList } from "@/lib/service/testing-reason";
 
 interface OptionState {
   customerOption: SelectOption[];
   processOption: SelectOption[];
-  productOption: SelectOption[]
+  productOption: SelectOption[];
+  testingReasonOption: SelectOption[];
 }
 
 export function ProductPageView() {
@@ -33,16 +35,18 @@ export function ProductPageView() {
   const [option, setOption] = useState<OptionState>({
     customerOption: [],
     processOption: [],
-    productOption: []
+    productOption: [],
+    testingReasonOption: []
   });
 
-  const { mutate: createTestingRequisition } = useCreateTestingRequisition()
   const { data: customerData } = useGetCustomerList();
   const { data: processData } = useGetProcessList();
+  const { data: testingReasonData } = useGetTestingReasonList()
   const { data: productData, refetch: refetchProduct } = useGetProductList({
     customerId: selectedCustomer?.value || null,
     processId: selectedProcess?.value || null,
   });
+  const { mutateAsync: createTestingRequisition } = useCreateTestingRequisition()
 
   const onSubmit = async (field: CreateItemRequisitionType) => {
     try {
@@ -51,14 +55,13 @@ export function ProductPageView() {
         productId: field.productId,
         trialNo: field.trialNo,
         testDate: field.testDate || new Date(),
-        testingReasonId: field.testingReason,
+        testingReasonId: field.testingReason?.value || '',
         mcName: field.mcName,
-        inspectionSample: field.inspectionSample,
-        toolroomSample: field.toolroomSample,
-        clientSample: field.clientSample
+        inspectionSample: Number(field.inspectionSample),
+        toolroomSample: Number(field.toolroomSample),
+        clientSample: Number(field.clientSample)
       }
-      const data = await createTestingRequisition(payload)
-      console.log(data, ">>>>cek data");
+      await createTestingRequisition(payload)
     } catch (error) {
       notifyError(error)
     }
@@ -67,13 +70,15 @@ export function ProductPageView() {
   useEffect(() => {
     const customerOptionNew: SelectOption[] = customerData ? customerData.map((el) => ({ label: el.customerName, value: el.id })) : [];
     const processOptionNew: SelectOption[] = processData ? processData.map((el) => ({ label: el.processName, value: el.id })) : [];
+    const testingReasonNew: SelectOption[] = testingReasonData ? testingReasonData.map((el) => ({ label: el.reason, value: el.id })) : []
 
     setOption((prev) => ({
       ...prev,
       customerOption: customerOptionNew,
       processOption: processOptionNew,
+      testingReasonOption: testingReasonNew
     }));
-  }, [customerData, processData]);
+  }, [customerData, processData, testingReasonData]);
 
   useEffect(() => {
     if (productData && productData?.length > 0) {
@@ -114,6 +119,7 @@ export function ProductPageView() {
         customerOption={option.customerOption}
         processOption={option.processOption}
         productOption={option.productOption}
+        testingReasonOption={option.testingReasonOption}
         onSubmit={handleSubmit(onSubmit)}
       />
     </FormPageTemplate>

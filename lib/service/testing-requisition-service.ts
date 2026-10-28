@@ -5,6 +5,6 @@ import { API_PATHS } from "../api-path"
 
 export const useCreateTestingRequisition = () => {
   return useMutation({
-    mutationFn: (request: RequestItemRequisitionType): Promise<any> => api.post(API_PATHS.testingRequisition.create, request)
+    mutationFn: (request: RequestItemRequisitionType) => api.post(API_PATHS.testingRequisition.create, request)
   })
 }

@@ -11,7 +11,7 @@ export interface CreateItemRequisitionType {
   rawMaterial: string;
   trialNo: string;
   testDate: Date | null;
-  testingReason: string;
+  testingReason: SelectOption | null;
   mouldNo: string;
   equipmentNo: string;
   cavityNo: string;

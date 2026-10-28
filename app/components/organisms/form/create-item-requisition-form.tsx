@@ -4,9 +4,7 @@ import { type ReactNode } from "react";
 import { Controller, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Input } from "@/app/components/atoms/input";
-import { Textarea } from "@/app/components/atoms/textarea";
 import { Button } from "@/app/components/atoms/button";
-import { partNoOptions } from "@/app/data/item-requisition";
 import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition";
 import { cn } from "@/lib/utils";
 import { SelectOption } from "@/app/types/select-option";
@@ -21,6 +19,7 @@ interface Props {
   customerOption: SelectOption[];
   processOption: SelectOption[];
   productOption: SelectOption[];
+  testingReasonOption: SelectOption[];
   onSubmit: () => void;
 }
 
@@ -58,7 +57,8 @@ export default function CreateItemRequisitionForm({
   onSubmit,
   customerOption,
   processOption,
-  productOption
+  productOption,
+  testingReasonOption
 }: Props) {
   const text = (name: Name, label: string, type = "text") => (
     <Row label={label} error={errors[name]?.message as string | undefined}>
@@ -66,7 +66,11 @@ export default function CreateItemRequisitionForm({
     </Row>
   );
 
-  const select = (name: "partNo" | "process" | "customer", label: string, options: SelectOption[]) => (
+  const select = (
+    name: "partNo" | "process" | "customer" | "testingReason",
+    label: string,
+    options: SelectOption[]
+  ) => (
     <Row label={label} error={errors[name]?.message as string | undefined}>
       <Controller
         name={name}
@@ -85,7 +89,7 @@ export default function CreateItemRequisitionForm({
     </Row>
   );
 
-  const shots = (name: Name, label: string) => (
+  const shots = (name: Name, label: string, type = "text") => (
     <Row label={label}>
       <div className="flex w-48">
         <Input type="number" min={0} className="rounded-r-none" {...register(name as never)} />
@@ -112,9 +116,7 @@ export default function CreateItemRequisitionForm({
           {text("rawMaterial", "Raw Material to be Used")}
           {text("trialNo", "Trial No")}
           {text("testDate", "Test Date", "date")}
-          <Row label="Reason for Testing">
-            <Textarea rows={3} {...register("testingReason")} />
-          </Row>
+          {select("testingReason", "Reason for Testing", testingReasonOption)}
         </div>
 
         <div className="flex flex-col gap-4">
@@ -124,7 +126,7 @@ export default function CreateItemRequisitionForm({
           {text("mcName", "M/C Name")}
           <h3 className="pt-1 text-sm font-semibold">Number of Shots Requested</h3>
           {shots("inspectionSample", "First Article Inspection")}
-          {shots("toolroomSample", "Samples for Toolroom")}
+          {shots("toolroomSample", "Samples for Toolroom", "number")}
           {shots("clientSample", "Others")}
         </div>
       </div>

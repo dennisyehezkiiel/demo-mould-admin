@@ -12,7 +12,7 @@ export const createItemRequisitionData: CreateItemRequisitionType = {
   rawMaterial: "",
   trialNo: "",
   testDate: null,
-  testingReason: "",
+  testingReason: null,
   mouldNo: "",
   equipmentNo: "",
   cavityNo: "",
