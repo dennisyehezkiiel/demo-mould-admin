@@ -4,15 +4,18 @@ import { FormPageTemplate } from "@/app/components/templates/form-page-template"
 import { createItemRequisitionData } from "@/app/data/item-requisition";
 import { useForm } from "react-hook-form";
 import CreateItemRequisitionForm from "../organisms/form/create-item-requisition-form";
-import { useGetCustomerList } from "@/lib/service/customer-service";
-import { useGetProcessList } from "@/lib/service/process-service";
 import { useGetProductList } from "@/lib/service/product-service";
 import { useEffect, useState } from "react";
 import { SelectOption } from "@/app/types/select-option";
 import { CreateItemRequisitionType, RequestItemRequisitionType } from "@/app/types/request/item-requisition";
 import { useCreateTestingRequisition } from "@/lib/service/testing-requisition-service";
 import { useNotifyError } from "@/lib/use-notify-error";
-import { useGetTestingReasonList } from "@/lib/service/testing-reason";
+
+interface Props {
+  customerOption: SelectOption[];
+  processOption: SelectOption[];
+  testingReasonOption: SelectOption[]
+}
 
 interface OptionState {
   customerOption: SelectOption[];
@@ -21,7 +24,11 @@ interface OptionState {
   testingReasonOption: SelectOption[];
 }
 
-export function CreateItemRequisitionPageView() {
+export function CreateItemRequisitionPageView({
+  customerOption,
+  processOption,
+  testingReasonOption
+}: Props) {
   const notifyError = useNotifyError();
 
   const { setValue, watch, register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateItemRequisitionType>({
@@ -32,16 +39,8 @@ export function CreateItemRequisitionPageView() {
   const selectedProcess: SelectOption | null = watch('process');
   const selectedProduct: SelectOption | null = watch('partNo');
 
-  const [option, setOption] = useState<OptionState>({
-    customerOption: [],
-    processOption: [],
-    productOption: [],
-    testingReasonOption: []
-  });
+  const [productOption, setProductOption] = useState<SelectOption[]>([])
 
-  const { data: customerData } = useGetCustomerList();
-  const { data: processData } = useGetProcessList();
-  const { data: testingReasonData } = useGetTestingReasonList()
   const { data: productData, refetch: refetchProduct } = useGetProductList({
     customerId: selectedCustomer?.value || null,
     processId: selectedProcess?.value || null,
@@ -68,25 +67,9 @@ export function CreateItemRequisitionPageView() {
   }
 
   useEffect(() => {
-    const customerOptionNew: SelectOption[] = customerData ? customerData.map((el) => ({ label: el.customerName, value: el.id })) : [];
-    const processOptionNew: SelectOption[] = processData ? processData.map((el) => ({ label: el.processName, value: el.id })) : [];
-    const testingReasonNew: SelectOption[] = testingReasonData ? testingReasonData.map((el) => ({ label: el.reason, value: el.id })) : []
-
-    setOption((prev) => ({
-      ...prev,
-      customerOption: customerOptionNew,
-      processOption: processOptionNew,
-      testingReasonOption: testingReasonNew
-    }));
-  }, [customerData, processData, testingReasonData]);
-
-  useEffect(() => {
     if (productData && productData?.length > 0) {
       const productOptionNew = productData.map((el) => ({ label: el.productNo, value: el.id }))
-      setOption((prev) => ({
-        ...prev,
-        productOption: productOptionNew
-      }));
+      setProductOption(productOptionNew)
     }
   }, [productData])
 
@@ -116,10 +99,10 @@ export function CreateItemRequisitionPageView() {
         control={control}
         errors={errors}
         isSubmitting={isSubmitting}
-        customerOption={option.customerOption}
-        processOption={option.processOption}
-        productOption={option.productOption}
-        testingReasonOption={option.testingReasonOption}
+        customerOption={customerOption}
+        processOption={processOption}
+        productOption={productOption}
+        testingReasonOption={testingReasonOption}
         onSubmit={handleSubmit(onSubmit)}
       />
     </FormPageTemplate>
