@@ -1,11 +1,11 @@
-import { ChevronsLeft, ChevronsRight, Layers, Package } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, Package } from "lucide-react";
 import { Button } from "@/app/components/atoms/button";
 import { Logo } from "@/app/components/atoms/logo";
 import { NavLink } from "@/app/components/molecules/nav-link";
+import Paths from "@/lib/route-paths";
 
 const nav = [
-  { href: "/dashboard/items", label: "Items", icon: Package },
-  { href: "/dashboard/materials", label: "Materials", icon: Layers },
+  { href: Paths.testingRequisition.list, label: "Item Requisition", icon: Package },
 ];
 
 export function Sidebar({

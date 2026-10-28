@@ -1,4 +1,4 @@
-import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition-type";
+import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition";
 import { SelectOption } from "../types/select-option";
 
 export const createItemRequisitionData: CreateItemRequisitionType = {
@@ -7,19 +7,20 @@ export const createItemRequisitionData: CreateItemRequisitionType = {
   process: null,
   backflush: "",
   productDrawingNo: "",
-  revisionNo: "",
+  revisionNo: 0,
   customer: null,
   rawMaterial: "",
   trialNo: "",
-  testDate: "",
-  testingReason: "",
+  testDate: null,
+  testingReason: null,
   mouldNo: "",
   equipmentNo: "",
   cavityNo: "",
   mcName: "",
-  articleSample: "",
-  toolroomSample: "",
-  customerSample: "",
+  toolroomSample: 0,
+  inspectionSample: 0,
+  clientSample: 0,
+  productId: ""
 };
 
 // ponytail: static placeholder options, swap for API data when endpoints exist

@@ -22,7 +22,6 @@ import { useNotifyError } from "@/lib/use-notify-error";
 export function LoginForm() {
   const { replace } = useRouter();
   const notifyError = useNotifyError();
-  // set through the provider's Cookies instance so useCookies elsewhere sees the new values at once
   const [, setCookie] = useCookies([...AUTH_COOKIES]);
   const [loading, setLoading] = useState(false);
   const {
@@ -39,7 +38,7 @@ export function LoginForm() {
       setCookie("name", res.name, { path: "/" });
       setCookie("email", res.email, { path: "/" });
       setCookie("role", res.role, { path: "/" });
-      replace(Paths.testingRequisition.create);
+      replace(Paths.testingRequisition.list);
     } catch (error) {
       notifyError(error);
     } finally {

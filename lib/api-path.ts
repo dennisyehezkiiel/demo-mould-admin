@@ -12,8 +12,8 @@ export const API_PATHS = {
     delete: (id: Id) => `/items/${id}`,
   },
   testingRequisition: {
-    list: '/testing-requisition',
-    create: '/testing-requisition'
+    list: '/testing-requisitions',
+    create: '/testing-requisitions'
   },
   process: {
     list: '/processes'
