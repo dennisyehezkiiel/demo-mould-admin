@@ -20,6 +20,7 @@ interface Props {
   isSubmitting: boolean;
   customerOption: SelectOption[];
   processOption: SelectOption[];
+  productOption: SelectOption[];
   onSubmit: () => void;
 }
 
@@ -56,7 +57,8 @@ export default function CreateItemRequisitionForm({
   isSubmitting,
   onSubmit,
   customerOption,
-  processOption
+  processOption,
+  productOption
 }: Props) {
   const text = (name: Name, label: string, type = "text") => (
     <Row label={label} error={errors[name]?.message as string | undefined}>
@@ -102,7 +104,7 @@ export default function CreateItemRequisitionForm({
         <div className="flex flex-col gap-4">
           {select("customer", "Customer", customerOption)}
           {select("process", "Process", processOption)}
-          {select("partNo", "Part No", partNoOptions)}
+          {select("partNo", "Part No", productOption)}
           {text("productName", "Product Name")}
           {text("backflush", "Backflush")}
           {text("productDrawingNo", "Product Drawing No")}

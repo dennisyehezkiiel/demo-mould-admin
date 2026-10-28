@@ -6,7 +6,7 @@ export interface CreateItemRequisitionType {
   process: SelectOption | null;
   backflush: string;
   productDrawingNo: string;
-  revisionNo: string;
+  revisionNo: number;
   customer: SelectOption | null;
   rawMaterial: string;
   trialNo: string;

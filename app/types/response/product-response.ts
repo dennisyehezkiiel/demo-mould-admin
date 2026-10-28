@@ -9,5 +9,6 @@ export interface ProductResponse {
   mouldNo: string;
   equipmentNo: string;
   cavityNo: string;
-  process: ProcessResponse
+  process: ProcessResponse;
+  revisionNo: number;
 }

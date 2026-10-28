@@ -7,7 +7,7 @@ export const createItemRequisitionData: CreateItemRequisitionType = {
   process: null,
   backflush: "",
   productDrawingNo: "",
-  revisionNo: "",
+  revisionNo: 0,
   customer: null,
   rawMaterial: "",
   trialNo: "",
