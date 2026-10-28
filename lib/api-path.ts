@@ -12,7 +12,7 @@ export const API_PATHS = {
     delete: (id: Id) => `/items/${id}`,
   },
   testingRequisition: {
-    list: '/testing-requisition',
+    list: '/testing-requisitions',
     create: '/testing-requisitions'
   },
   process: {

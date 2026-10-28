@@ -21,7 +21,7 @@ interface OptionState {
   testingReasonOption: SelectOption[];
 }
 
-export function ProductPageView() {
+export function CreateItemRequisitionPageView() {
   const notifyError = useNotifyError();
 
   const { setValue, watch, register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateItemRequisitionType>({
@@ -101,13 +101,13 @@ export function ProductPageView() {
       setValue('cavityNo', findProduct?.cavityNo || '')
       setValue('productId', findProduct?.id || '')
     }
-  }, [productData, selectedProduct])
+  }, [productData, selectedProduct, setValue])
 
   useEffect(() => {
     if (selectedCustomer && selectedProcess) {
       refetchProduct()
     }
-  }, [selectedCustomer, selectedProcess])
+  }, [refetchProduct, selectedCustomer, selectedProcess])
 
   return (
     <FormPageTemplate title="Testing Requisition">
