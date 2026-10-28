@@ -10,13 +10,26 @@ export interface CreateItemRequisitionType {
   customer: SelectOption | null;
   rawMaterial: string;
   trialNo: string;
-  testDate: string;
+  testDate: Date | null;
   testingReason: string;
   mouldNo: string;
   equipmentNo: string;
   cavityNo: string;
   mcName: string;
-  articleSample: string;
-  toolroomSample: string;
-  customerSample: string;
+  inspectionSample: number;
+  toolroomSample: number;
+  clientSample: number;
+  productId: string
+}
+
+export interface RequestItemRequisitionType {
+  customerId: string;
+  productId: string;
+  trialNo: string;
+  testDate: Date;
+  testingReasonId: string;
+  mcName: string;
+  inspectionSample: number;
+  toolroomSample: number;
+  clientSample: number;
 }

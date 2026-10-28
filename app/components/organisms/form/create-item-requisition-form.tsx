@@ -7,7 +7,7 @@ import { Input } from "@/app/components/atoms/input";
 import { Textarea } from "@/app/components/atoms/textarea";
 import { Button } from "@/app/components/atoms/button";
 import { partNoOptions } from "@/app/data/item-requisition";
-import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition-type";
+import type { CreateItemRequisitionType } from "@/app/types/request/item-requisition";
 import { cn } from "@/lib/utils";
 import { SelectOption } from "@/app/types/select-option";
 
@@ -123,9 +123,9 @@ export default function CreateItemRequisitionForm({
           {text("cavityNo", "Cavity No")}
           {text("mcName", "M/C Name")}
           <h3 className="pt-1 text-sm font-semibold">Number of Shots Requested</h3>
-          {shots("articleSample", "First Article Inspection")}
+          {shots("inspectionSample", "First Article Inspection")}
           {shots("toolroomSample", "Samples for Toolroom")}
-          {shots("customerSample", "Others")}
+          {shots("clientSample", "Others")}
         </div>
       </div>
 

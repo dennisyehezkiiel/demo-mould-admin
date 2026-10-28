@@ -22,7 +22,6 @@ import { useNotifyError } from "@/lib/use-notify-error";
 export function LoginForm() {
   const { replace } = useRouter();
   const notifyError = useNotifyError();
-  // set through the provider's Cookies instance so useCookies elsewhere sees the new values at once
   const [, setCookie] = useCookies([...AUTH_COOKIES]);
   const [loading, setLoading] = useState(false);
   const {

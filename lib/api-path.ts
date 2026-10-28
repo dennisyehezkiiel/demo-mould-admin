@@ -13,7 +13,7 @@ export const API_PATHS = {
   },
   testingRequisition: {
     list: '/testing-requisition',
-    create: '/testing-requisition'
+    create: '/testing-requisitions'
   },
   process: {
     list: '/processes'
