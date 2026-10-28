@@ -8,6 +8,7 @@ const Paths = {
     itemCreate: '/dashboard/new'
   },
   testingRequisition: {
+    list: '/item-requisition',
     create: '/item-requisition/new'
   }
 }

@@ -38,7 +38,7 @@ export function LoginForm() {
       setCookie("name", res.name, { path: "/" });
       setCookie("email", res.email, { path: "/" });
       setCookie("role", res.role, { path: "/" });
-      replace(Paths.testingRequisition.create);
+      replace(Paths.testingRequisition.list);
     } catch (error) {
       notifyError(error);
     } finally {
