@@ -60,9 +60,9 @@ export default function CreateItemRequisitionForm({
   productOption,
   testingReasonOption
 }: Props) {
-  const text = (name: Name, label: string, type = "text") => (
+  const text = (name: Name, label: string, type = "text", disabled = false) => (
     <Row label={label} error={errors[name]?.message as string | undefined}>
-      <Input type={type} {...register(name as never)} />
+      <Input type={type} disabled={disabled} {...register(name as never)} />
     </Row>
   );
 
@@ -109,10 +109,10 @@ export default function CreateItemRequisitionForm({
           {select("customer", "Customer", customerOption)}
           {select("process", "Process", processOption)}
           {select("partNo", "Part No", productOption)}
-          {text("productName", "Product Name")}
+          {text("productName", "Product Name", "text", true)}
           {text("backflush", "Backflush")}
-          {text("productDrawingNo", "Product Drawing No")}
-          {text("revisionNo", "Revision No")}
+          {text("productDrawingNo", "Product Drawing No", "text", true)}
+          {text("revisionNo", "Revision No", "text", true)}
           {text("rawMaterial", "Raw Material to be Used")}
           {text("trialNo", "Trial No")}
           {text("testDate", "Test Date", "date")}
@@ -120,9 +120,9 @@ export default function CreateItemRequisitionForm({
         </div>
 
         <div className="flex flex-col gap-4">
-          {text("mouldNo", "Mold number")}
-          {text("equipmentNo", "Equipment No.")}
-          {text("cavityNo", "Cavity No")}
+          {text("mouldNo", "Mold number", "text", true)}
+          {text("equipmentNo", "Equipment No.", "text", true)}
+          {text("cavityNo", "Cavity No", "text", true)}
           {text("mcName", "M/C Name")}
           <h3 className="pt-1 text-sm font-semibold">Number of Shots Requested</h3>
           {shots("inspectionSample", "First Article Inspection")}

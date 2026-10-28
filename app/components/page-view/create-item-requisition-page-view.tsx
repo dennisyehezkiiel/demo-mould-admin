@@ -10,6 +10,8 @@ import { SelectOption } from "@/app/types/select-option";
 import { CreateItemRequisitionType, RequestItemRequisitionType } from "@/app/types/request/item-requisition";
 import { useCreateTestingRequisition } from "@/lib/service/testing-requisition-service";
 import { useNotifyError } from "@/lib/use-notify-error";
+import { useRouter } from "next/navigation";
+import Paths from "@/lib/route-paths";
 
 interface Props {
   customerOption: SelectOption[];
@@ -17,18 +19,12 @@ interface Props {
   testingReasonOption: SelectOption[]
 }
 
-interface OptionState {
-  customerOption: SelectOption[];
-  processOption: SelectOption[];
-  productOption: SelectOption[];
-  testingReasonOption: SelectOption[];
-}
-
 export function CreateItemRequisitionPageView({
   customerOption,
   processOption,
   testingReasonOption
 }: Props) {
+  const { push } = useRouter()
   const notifyError = useNotifyError();
 
   const { setValue, watch, register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateItemRequisitionType>({
@@ -61,6 +57,7 @@ export function CreateItemRequisitionPageView({
         clientSample: Number(field.clientSample)
       }
       await createTestingRequisition(payload)
+      push(Paths.testingRequisition.list)
     } catch (error) {
       notifyError(error)
     }
