@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, useState, type PointerEvent, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 import { PageHeader } from "@/app/components/molecules/page-header";
 import { Badge } from "@/app/components/atoms/badge";
 import { Button } from "@/app/components/atoms/button";
@@ -19,45 +25,10 @@ import {
   DialogTitle,
 } from "@/app/components/atoms/dialog";
 import { cn } from "@/lib/utils";
+import { useGetItemRequisitionDetail } from "@/lib/service/testing-requisition-service";
 
 // ponytail: hardcoded mock data, swap for useGet...(id) when the detail API exists
 const REQ = { id: "#TR-2026-0042", status: "In Review" };
-
-const SECTIONS: { title: string; rows: [string, string][] }[] = [
-  {
-    title: "General & Tooling Information",
-    rows: [
-      ["Customer", "Acme Corporation"],
-      ["Process", "Plastic Injection Molding"],
-      ["Part No", "PT-99823-B"],
-      ["Product Name", "Front Bezel Housing"],
-      ["Backflush", "Yes (Auto-deduct)"],
-      ["Mold Number", "MLD-4021"],
-      ["Equipment No", "EQ-883"],
-      ["Cavity No", "4 Cavities (1x4)"],
-      ["M/C Name", "Nissei 180T Hybrid"],
-    ],
-  },
-  {
-    title: "Material & Drawing Specifications",
-    rows: [
-      ["Product Drawing No", "DWG-2026-4491"],
-      ["Revision No", "Rev. 0"],
-      ["Raw Material", "ABS GP-22 (Black)"],
-      ["Trial No", "T1"],
-    ],
-  },
-  {
-    title: "Test Details & Shot Quantities",
-    rows: [
-      ["Test Date", "12 Nov 2026"],
-      ["Reason for Testing", "New Mold Trial"],
-      ["First Article Inspection", "10 Shots"],
-      ["Samples for Toolroom", "20 Shots"],
-      ["Others", "5 Shots"],
-    ],
-  },
-];
 
 interface Signer {
   role: string;
@@ -151,7 +122,11 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-export default function DetailItemRequisitionPageView() {
+export default function DetailItemRequisitionPageView({
+  requisitionId,
+}: {
+  requisitionId: string;
+}) {
   const [signers, setSigners] = useState(INITIAL_SIGNERS);
   const [open, setOpen] = useState(false);
   const [sig, setSig] = useState<string | null>(null);
@@ -159,6 +134,49 @@ export default function DetailItemRequisitionPageView() {
   const nextIdx = signers.findIndex((s) => !s.signedAt);
   const allSigned = nextIdx === -1;
   const status = allSigned ? "Approved" : REQ.status;
+
+  const { data, isLoading } = useGetItemRequisitionDetail(requisitionId);
+
+  const sectionDetail = useMemo(
+    () => [
+      {
+        title: "General & Tooling Information",
+        rows: [
+          ["Customer", `${data?.customer.customerName}`],
+          ["Process", "Plastic Injection Molding"],
+          ["Part No", `${data?.product.productNo}`],
+          ["Product Name", `${data?.product.productName}`],
+          ["Backflush", "Yes (Auto-deduct)"],
+          ["Mold Number", `${data?.product.mouldNo}`],
+          ["Equipment No", `${data?.product.equipmentNo}`],
+          ["Cavity No", `${data?.product.cavityNo}`],
+          ["M/C Name", `${data?.mcName}`],
+        ],
+      },
+      {
+        title: "Material & Drawing Specifications",
+        rows: [
+          ["Product Drawing No", `${data?.product.productDrawingNumber}`],
+          ["Revision No", `${data?.revisionNo}`],
+          ["Raw Material", "ABS GP-22 (Black)"],
+          ["Trial No", `${data?.trialNo}`],
+        ],
+      },
+      {
+        title: "Test Details & Shot Quantities",
+        rows: [
+          ["Test Date", `${data?.testDate}`],
+          ["Reason for Testing", `${data?.testingReason.reason}`],
+          ["First Article Inspection", `${data?.inspectionSample}`],
+          ["Samples for Toolroom", `${data?.toolroomSample}`],
+          ["Others", `${data?.clientSample}`],
+        ],
+      },
+    ],
+    [data],
+  );
+
+  console.log(data, ">>>cek data");
 
   const sign = () => {
     if (!sig) return;
@@ -193,15 +211,12 @@ export default function DetailItemRequisitionPageView() {
       </PageHeader>
 
       <div className="-mt-3 mb-6 flex items-center gap-2">
-        <Badge variant="outline" className="font-mono">
-          {REQ.id}
-        </Badge>
         <Badge variant={allSigned ? "default" : "secondary"}>{status}</Badge>
       </div>
 
       <div className="">
         <div className="flex flex-col gap-6">
-          {SECTIONS.map((s) => (
+          {sectionDetail.map((s) => (
             <Card key={s.title}>
               <CardHeader className="border-b">
                 <CardTitle>{s.title}</CardTitle>
