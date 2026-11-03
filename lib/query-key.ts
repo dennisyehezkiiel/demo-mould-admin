@@ -1,6 +1,7 @@
 export const queryKey = {
   items: {
     list: ["items", "list"],
+    detail: (id: string) => [id]
   },
   process: {
     list: ['process', 'list'],
