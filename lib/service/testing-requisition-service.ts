@@ -4,12 +4,19 @@ import { api } from "../api"
 import { API_PATHS } from "../api-path"
 import { queryKey } from "../query-key"
 import { TestingRequisitionListResponse } from "@/app/types/response/testing-requisition-response"
-import { PaginationResponse } from "@/app/types/response/base-response"
+import { PaginationResponse, SingleResponse } from "@/app/types/response/base-response"
 
 export const useGetItemRequisitionList = (params?: Record<string, unknown>) => {
   return useQuery({
     queryKey: queryKey.items.list,
     queryFn: (): Promise<PaginationResponse<TestingRequisitionListResponse>> => api.get<PaginationResponse<TestingRequisitionListResponse>>(API_PATHS.testingRequisition.list, { params }),
+  });
+}
+
+export const useGetItemRequisitionDetail = (id: string) => {
+  return useQuery({
+    queryKey: queryKey.items.detail(id),
+    queryFn: (): Promise<SingleResponse<TestingRequisitionListResponse>> => api.get<SingleResponse<TestingRequisitionListResponse>>(`${API_PATHS.testingRequisition.list}/${id}`, {}),
   });
 }
 

@@ -51,8 +51,6 @@ export default async function Page() {
     const testingReason: TestingReasonResponse[] =
       await testingReasonResponse.json();
 
-    console.log(customer, ">>>cek customerOption");
-
     customerOption = customer.map((el) => ({
       label: el.customerName,
       value: el.id,

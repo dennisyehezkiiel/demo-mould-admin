@@ -9,3 +9,7 @@ export interface PaginationResponse<T> {
   data: T[];
   pagination: PaginatingResponse
 }
+
+export interface SingleResponse<T> {
+  data: T;
+}
