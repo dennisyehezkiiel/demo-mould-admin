@@ -17,3 +17,17 @@ export interface TestingRequisitionListResponse {
   product: ProductResponse
   testingReason: TestingReasonResponse
 }
+
+export interface TestingRequisitionDetailResponse {
+  id: string;
+  trialNo: number;
+  revisionNo: number;
+  testDate: Date;
+  mcName: string;
+  inspectionSample: number;
+  toolroomSample: number;
+  clientSample: number
+  customer: CustomerResponse
+  product: ProductResponse
+  testingReason: TestingReasonResponse
+}
