@@ -8,52 +8,63 @@ import { API_PATHS } from "@/lib/api-path";
 import { cookies } from "next/headers";
 
 export default async function Page() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('access_token')?.value || ''
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value || "";
 
-  let customerOption: SelectOption[] = []
-  let processOption: SelectOption[] = []
-  let testingReasonOption: SelectOption[] = []
+  let customerOption: SelectOption[] = [];
+  let processOption: SelectOption[] = [];
+  let testingReasonOption: SelectOption[] = [];
 
   try {
     const customerResponse = await fetch(
       `${Environment.baseUrl.API}${API_PATHS.customer.list}`,
       {
-        cache: 'no-store',
+        cache: "no-store",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    )
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     const processResponse = await fetch(
       `${Environment.baseUrl.API}${API_PATHS.process.list}`,
       {
-        cache: 'no-store',
+        cache: "no-store",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    )
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     const testingReasonResponse = await fetch(
       `${Environment.baseUrl.API}${API_PATHS.testingReason.list}`,
       {
-        cache: 'no-store',
+        cache: "no-store",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    )
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-    const customer: CustomerResponse[] = await customerResponse.json()
-    const process: ProcessResponse[] = await processResponse.json()
-    const testingReason: TestingReasonResponse[] = await testingReasonResponse.json()
+    const customer: CustomerResponse[] = await customerResponse.json();
+    const process: ProcessResponse[] = await processResponse.json();
+    const testingReason: TestingReasonResponse[] =
+      await testingReasonResponse.json();
 
-    customerOption = customer.map((el) => ({ label: el.customerName, value: el.id }))
-    processOption = process.map((el) => ({ label: el.processName, value: el.id }))
-    testingReasonOption = testingReason.map((el) => ({ label: el.reason, value: el.id }))
+    console.log(customer, ">>>cek customerOption");
 
+    customerOption = customer.map((el) => ({
+      label: el.customerName,
+      value: el.id,
+    }));
+    processOption = process.map((el) => ({
+      label: el.processName,
+      value: el.id,
+    }));
+    testingReasonOption = testingReason.map((el) => ({
+      label: el.reason,
+      value: el.id,
+    }));
   } catch (error) {
     console.log(error, ">>>>cek err");
   }
@@ -64,5 +75,5 @@ export default async function Page() {
       processOption={processOption}
       testingReasonOption={testingReasonOption}
     />
-  )
+  );
 }

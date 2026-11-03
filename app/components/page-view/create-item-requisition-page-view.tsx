@@ -27,7 +27,7 @@ export function CreateItemRequisitionPageView({
   const { push } = useRouter()
   const notifyError = useNotifyError();
 
-  const { setValue, watch, register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateItemRequisitionType>({
+  const { setValue, watch, trigger, reset, register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateItemRequisitionType>({
     defaultValues: createItemRequisitionData,
   });
 
@@ -95,6 +95,8 @@ export function CreateItemRequisitionPageView({
         register={register}
         control={control}
         errors={errors}
+        trigger={trigger}
+        reset={reset}
         isSubmitting={isSubmitting}
         customerOption={customerOption}
         processOption={processOption}
