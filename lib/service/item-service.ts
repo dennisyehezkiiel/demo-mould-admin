@@ -20,7 +20,7 @@ export const itemService = {
 
 export const useGetItemList = (params?: Record<string, unknown>) => {
   return useQuery({
-    queryKey: queryKey.items.list,
+    queryKey: queryKey.items.list(params),
     queryFn: (): Promise<Item[]> => api.get<Item[]>(API_PATHS.items.list, { params }),
   });
 }

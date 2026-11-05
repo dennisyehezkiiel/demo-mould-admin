@@ -1,6 +1,6 @@
 export const queryKey = {
   items: {
-    list: ["items", "list"],
+    list: (params?: unknown) => ["items", "list", params],
     detail: (id: string) => [id]
   },
   process: {
