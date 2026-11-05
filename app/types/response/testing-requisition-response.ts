@@ -22,12 +22,14 @@ export interface TestingRequisitionDetailResponse {
   id: string;
   trialNo: number;
   revisionNo: number;
+  rawMaterial: string;
   testDate: Date;
   mcName: string;
   inspectionSample: number;
   toolroomSample: number;
-  clientSample: number
-  customer: CustomerResponse
-  product: ProductResponse
-  testingReason: TestingReasonResponse
+  clientSample: number;
+  customer: CustomerResponse;
+  product: ProductResponse;
+  testingReason: TestingReasonResponse;
+  backFlush: string;
 }

@@ -143,10 +143,10 @@ export default function DetailItemRequisitionPageView({
         title: "General & Tooling Information",
         rows: [
           ["Customer", `${data?.customer.customerName}`],
-          ["Process", "Plastic Injection Molding"],
+          ["Process", `${data?.product.process.processName}`],
           ["Part No", `${data?.product.productNo}`],
           ["Product Name", `${data?.product.productName}`],
-          ["Backflush", "Yes (Auto-deduct)"],
+          ["Backflush", `${data?.backFlush || '-'}`],
           ["Mold Number", `${data?.product.mouldNo}`],
           ["Equipment No", `${data?.product.equipmentNo}`],
           ["Cavity No", `${data?.product.cavityNo}`],
@@ -158,7 +158,7 @@ export default function DetailItemRequisitionPageView({
         rows: [
           ["Product Drawing No", `${data?.product.productDrawingNumber}`],
           ["Revision No", `${data?.revisionNo}`],
-          ["Raw Material", "ABS GP-22 (Black)"],
+          ["Raw Material", `${data?.rawMaterial || '-'}`],
           ["Trial No", `${data?.trialNo}`],
         ],
       },
@@ -175,8 +175,6 @@ export default function DetailItemRequisitionPageView({
     ],
     [data],
   );
-
-  console.log(data, ">>>cek data");
 
   const sign = () => {
     if (!sig) return;
