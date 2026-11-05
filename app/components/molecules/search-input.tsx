@@ -6,7 +6,7 @@ export function SearchInput(p: ComponentProps<"input">) {
   return (
     <div className="relative w-full sm:w-80">
       <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-      <Input {...p} className="pl-9" />
+      <Input {...p} className="rounded-xl pl-9 focus-visible:border-purple-400 focus-visible:ring-2 focus-visible:ring-purple-400" />
     </div>
   );
 }

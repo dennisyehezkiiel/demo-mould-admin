@@ -8,7 +8,7 @@ import { PaginationResponse, SingleResponse } from "@/app/types/response/base-re
 
 export const useGetItemRequisitionList = (params?: Record<string, unknown>) => {
   return useQuery({
-    queryKey: queryKey.items.list,
+    queryKey: queryKey.items.list(params),
     queryFn: (): Promise<PaginationResponse<TestingRequisitionListResponse>> => api.get<PaginationResponse<TestingRequisitionListResponse>>(API_PATHS.testingRequisition.list, { params }),
   });
 }

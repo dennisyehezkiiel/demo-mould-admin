@@ -32,7 +32,7 @@ export function ListPageTemplate({
           placeholder={placeholder}
           aria-label={`Search ${title.toLowerCase()}`}
         />
-        <Button asChild>
+        <Button asChild className="rounded-xl text-white active:scale-95">
           <Link href={addHref}><Plus /> {addLabel}</Link>
         </Button>
       </div>

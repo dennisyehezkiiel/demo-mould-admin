@@ -32,4 +32,6 @@ export interface RequestItemRequisitionType {
   inspectionSample: number;
   toolroomSample: number;
   clientSample: number;
+  backflush: string;
+  rawMaterial: string;
 }

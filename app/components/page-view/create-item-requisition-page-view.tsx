@@ -54,7 +54,9 @@ export function CreateItemRequisitionPageView({
         mcName: field.mcName,
         inspectionSample: Number(field.inspectionSample),
         toolroomSample: Number(field.toolroomSample),
-        clientSample: Number(field.clientSample)
+        clientSample: Number(field.clientSample),
+        backflush: field.backflush,
+        rawMaterial: field.rawMaterial
       }
       await createTestingRequisition(payload)
       push(Paths.testingRequisition.list)
